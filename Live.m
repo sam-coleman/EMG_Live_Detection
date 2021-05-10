@@ -6,11 +6,12 @@
 % Arduino and EMG sensors. Check out the Setup and Data Collection document
 % for additional context.
 %% Load Trained Algorithm
-load("data/trainedAlgorithm.mat");
-
-%% Configure serial port 
-clear;  % Clear all variables
+clear;  % Clear all vari ables
 clc; % Clear your command window output
+load("data/trainedAlgorithm.mat");
+disp("Loaded algorithm");
+%% Configure serial port 
+
 port = '/dev/ttyUSB0';     % Change this to match your installation!
 
 baudrate = 500000; % Serial bits per second, set in program
@@ -31,6 +32,7 @@ waittime = 0.5; % Time in seconds between rock, paper, scissors
 nbchan = num_sensors; % Number of channels to collect (starts with A0, up to A3)
 srate = 500; % 500 Hz collection rate
 n=ceil(epochlength .* srate); % Number of time points per event
+while 1
 data = zeros(nbchan, n, 1);
 for ev = 1:numevents
     disp("Press any key initiate game");
@@ -59,7 +61,7 @@ for ev = 1:numevents
             end
         end
     end
-end
+end 
 
 
 %% pre-process data
@@ -76,5 +78,6 @@ features = [emg_aac; emg_damv_10; emg_dasdv_10; emg_max]';
 
 %% Predict
 prediction_label = predict(trainedAlg, features);
-disp("You threw\n");
+disp("You threw:");
 disp(prediction_label);
+end
