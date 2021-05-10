@@ -151,7 +151,7 @@ classdef extract_features
         end
         
         function DAMV = calc_DAMV(data, N)
-            %calc_DMV calculates Difference Absolute Standard Deviation Value for
+            %calc_DMV calculates Difference Absolute Mean Value for
             %each trial across all channels
             DAMV = (squeeze(sum((abs(diff(data(:,:,:),2,2)).^2),2)))/(N-1);
         end

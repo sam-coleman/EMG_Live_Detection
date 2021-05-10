@@ -1,6 +1,6 @@
-%% Live Detection
-%Sam Coleman
-%Modified from code provided by Sam Michalka
+%% Live Rock Paper Scissors Detection
+% Sam Coleman
+% Modified from code provided by Sam Michalka
 
 % This script facilitates connecting to and collecting data from an
 % Arduino and EMG sensors. Check out the Setup and Data Collection document
@@ -23,7 +23,7 @@ sObj %This spits out the object again.
 % If you don't see the NumBytesAvailable growing, then wait a minute and
 % type sObj into the command window. If it is still zero, something is
 % wrong.
-%% Get data and write it to an array
+%% Data set up
 num_sensors = 3;   % Change this to match your number of sensors!
 numevents = 1; % Must divide evenly by number of eventoptions
 epochlength = 3; % Time in seconds to collect data per trial
@@ -32,6 +32,8 @@ waittime = 0.5; % Time in seconds between rock, paper, scissors
 nbchan = num_sensors; % Number of channels to collect (starts with A0, up to A3)
 srate = 500; % 500 Hz collection rate
 n=ceil(epochlength .* srate); % Number of time points per event
+
+%% Live Detection and Classification
 while 1
 data = zeros(nbchan, n, 1);
 for ev = 1:numevents
@@ -64,19 +66,19 @@ for ev = 1:numevents
 end 
 
 
-%% pre-process data
+% pre-process data
 for channel =1:size(data,1) 
     data(channel,:, :) = data(channel,:, :) - mean(data(channel,:, :),2); 
 end
 
-%% Extract Features
+% Extract Features
 emg_aac = extract_features.calc_aac(data);
 emg_damv_10 = extract_features.calc_DAMV(data, 10);
 emg_dasdv_10 = extract_features.calc_dasdv(data, 10)';
 emg_max = extract_features.max_value(data);
 features = [emg_aac; emg_damv_10; emg_dasdv_10; emg_max]';
 
-%% Predict
+% Predict
 prediction_label = predict(trainedAlg, features);
 disp("You threw:");
 disp(prediction_label);
